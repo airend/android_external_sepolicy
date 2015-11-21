@@ -12,6 +12,9 @@ allow init self:capability { sys_rawio mknod };
 allow init rootfs:file execute_no_trans;
 allow init system_file:file execute_no_trans;
 
+# fix some selinux denials related to supersu
+allow zygote init:unix_stream_socket { read write };
+
 # Running e2fsck or mkswap via fs_mgr.
 allow init dev_type:blk_file rw_file_perms;
 
@@ -51,6 +54,9 @@ allow init security_prop:property_service set;
 # Reload policy upon setprop selinux.reload_policy 1.
 r_dir_file(init, security_file)
 allow init kernel:security load_policy;
+
+# allow supolicy to also read sepolicy
+allow init kernel:security read_policy;
 
 # Any operation that can modify the kernel ring buffer, e.g. clear
 # or a read that consumes the messages that were read.
